@@ -1,4 +1,4 @@
-FROM php:7.1-fpm-alpine
+FROM php:7.0-fpm-alpine
 
 MAINTAINER JG <julien@mangue.eu>
 
@@ -32,6 +32,7 @@ RUN apk add --no-cache --virtual .build-deps \
         pdo_mysql \
         pdo_pgsql \
         pdo_sqlite \
+        php5-mysql \
         pcntl \
         tokenizer \
         xml \

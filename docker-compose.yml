@@ -1,37 +1,62 @@
 version: '2'
 services:
-
+  # yii_hzs:
+  #   build: yii_hzs
+  #   image: yii/hzs
+  #   volumes:
+  #     - "../yii_hzs:/apps/yii_hzs"
+  #     - "../zclib:/apps/zclib"
+  #   ports:
+  #     - "82:80"
+  #   environment:
+  #     - "DB_HOST=120.77.41.102"
+  #     - "DB_DATABASE=cst"
+  #     - "DB_USERNAME=qx"
+  #     - "DB_PASSWORD=123456"
+  #     - "REDIS_HOST=redis"
+  #     - "REDIS_PORT=6379"
+  #   restart: always
   php:
-    image: jguyomard/laravel-php:7.2
+    image: jguyomard/laravel-php:7.1
     volumes:
-      - ./:/var/www/
+      - ../cst/:/var/www/cst/
+      - ../yii_hzs:/var/www/yii_hzs
+      - ../zclib:/var/www/ZhiCloud.Lib
+      - ../zcloud_doc:/var/www/zcloud_doc
+      - ../lumu:/var/www/lumu
+      - ../ZhiCloud.Doc:/var/www/ZhiCloud.Doc
+      - ../log/docker_nginx:/var/log/nginx/
+      - ./nginx/1.13:/etc/nginx/conf.d/
       - $HOME/.composer/:$HOME/.composer/
+      - /etc/localtime:/etc/localtime
     environment:
       - "DB_HOST=mysql"
-      - "DB_DATABASE=homestead"
-      - "DB_USERNAME=homestead"
-      - "DB_PASSWORD=homestead"
+      - "DB_DATABASE=zhiCloudBase"
+      - "DB_USERNAME=root"
+      - "DB_PASSWORD=miao"
       - "REDIS_HOST=redis"
       - "REDIS_PORT=6379"
-
+    dns:
+      - 8.8.8.
+      - 61.139.2.69
   nginx:
     image: jguyomard/laravel-nginx:1.13
     volumes_from:
       - php
     ports:
-      - 8080:80
+      - 80:80
 
   mysql:
     image: mysql:5.7
     volumes:
       - mysqldata:/var/lib/mysql
     environment:
-      - "MYSQL_ROOT_PASSWORD=secret"
-      - "MYSQL_DATABASE=homestead"
-      - "MYSQL_USER=homestead"
-      - "MYSQL_PASSWORD=homestead"
-#    ports:
-#        - "3306:3306"
+      - "MYSQL_ROOT_PASSWORD=miao"
+      - "MYSQL_DATABASE=laravel"
+      - "MYSQL_USER=qx"
+      - "MYSQL_PASSWORD=123456"
+    ports:
+        - "3306:3306"
 
 #  pgsql:
 #    image: postgres:9.6-alpine
@@ -47,13 +72,13 @@ services:
   redis:
     image: redis:4.0-alpine
     command: redis-server --appendonly yes
-#    ports:
-#        - "6379:6379"
+    ports:
+        - "6379:6379"
 
-#  elastic:
-#    image: elasticsearch:5.5-alpine
-#    ports:
-#        - "9200:9200"
+  elastic:
+    image: elasticsearch:5.5-alpine
+    ports:
+        - "9200:9200"
 
 volumes:
   mysqldata:

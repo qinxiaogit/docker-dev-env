@@ -25,6 +25,7 @@ RUN apk add --no-cache --virtual .build-deps \
         curl \
         iconv \
         mbstring \
+        php5-mysql \
         pdo \
         pdo_mysql \
         pdo_pgsql \
